@@ -1,4 +1,5 @@
-
+<?php
+// $Id$
 
 function citybudget_test_data() {
   // Insert clusters.

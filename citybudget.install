@@ -63,12 +63,9 @@ function citybudget_schema() {
       ),
     ),
     'primary key' => array('id'),
-    'unique keys' => array(
-      'cluster_id' => array('cluster_id'),
-    ),
   );
 
-  $schema['citybudget_expenditure_categories'] = array(
+  $schema['citybudget_categories'] = array(
     'description' => t('Store the expenditure categories for all budgets'),
     'fields' => array(
       'id' => array(
@@ -103,8 +100,8 @@ function citybudget_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'expenditure_id' => array(
-        'description' => t('The {expenditure_categories}.id category identifier for this line item.'),
+      'category_id' => array(
+        'description' => t('The {categories}.id category identifier for this line item.'),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -140,7 +137,7 @@ function citybudget_schema() {
         'default' => 0.0,
       ),
     ),
-    'primary key' => array('program_id', 'expenditure_id'),
+    'primary key' => array('program_id', 'category_id'),
   );
 
   return $schema;

@@ -8,8 +8,9 @@
  * Implements the City Budget data schema with a web service.
  */
 
-define('CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE', 0);
-define('CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE', 1);
+define('CITYBUDGET_CATEGORY_EXPENSE', 0);
+define('CITYBUDGET_CATEGORY_REVENUE', 1);
+define('CITYBUDGET_CATEGORY_BOTH', 2);
 
 /**
 * Implementation of hook_menu().
@@ -19,6 +20,15 @@ function citybudget_menu() {
     'title' => 'Budget',
     'page callback' => 'citybudget_function',
     'access arguments' => array('access city budget data'),
+  );
+  $items['admin/content/citybudget'] = array(
+    'title' => 'Import Budget Data',
+    'description' => 'Import new budget data from CSV.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('citybudget_import_data'),
+    'access arguments' => array('administer city budget'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'citybudget.admin.inc',
   );
   return $items;
 }
@@ -51,13 +61,13 @@ function _citybudget_get_budget_program($program_name) {
     $query = 'SELECT * FROM {citybudget_line_items} WHERE program_id = %d';
     $results = db_query($query, array($program_id));
     
-    $expenditure_categories = _citybudget_list_expenditure_categories();
+    $categories = _citybudget_list_categories();
     $line_items = array();
     while($result = db_fetch_object($results)) {
-      $expenditure_id = $result->expenditure_id;
+      $category_id = $result->category_id;
       unset($result->program_id);
-      unset($result->expenditure_id);
-      $line_items[$expenditure_categories[$expenditure_id]->name] = $result;
+      unset($result->category_id);
+      $line_items[$categories[$category_id]->name] = $result;
     }
     $program->line_items = $line_items;
     return $program;
@@ -67,7 +77,7 @@ function _citybudget_get_budget_program($program_name) {
 }
 
 function _citybudget_list_entity_names($entity_type = 'programs') {
-  $entity_types = array('clusters', 'programs', 'expenditure_categories');
+  $entity_types = array('clusters', 'programs', 'categories');
   
   if(!in_array($entity_type, $entity_types)) {
     return FALSE;
@@ -113,25 +123,25 @@ function _citybudget_list_programs($programs = array()) {
   return $programs;
 }
 
-function _citybudget_list_expenditure_categories() {
-  $query = 'SELECT * FROM {citybudget_expenditure_categories}';
+function _citybudget_list_categories() {
+  $query = 'SELECT * FROM {citybudget_categories}';
   $results = db_query($query);
   
-  $expenditure_categories = array();
+  $categories = array();
   while($result = db_fetch_object($results)) {
     $result_id = $result->id;
     unset($result->id);
     
     switch($result->type) {
-      case CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE:
+      case CITYBUDGET_CATEGORY_EXPENSE:
         $result->type = 'expense';
         break;
-      case CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE:
+      case CITYBUDGET_CATEGORY_REVENUE:
         $result->type = 'revenue';
         break;
     }
     
-    $expenditure_categories[$result_id] = $result;
+    $categories[$result_id] = $result;
   }
-  return $expenditure_categories;
+  return $categories;
 }
