@@ -8,6 +8,9 @@
  * Implements the City Budget data schema with a web service.
  */
 
+define('CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE', 0);
+define('CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE', 1);
+
 /**
 * Implementation of hook_menu().
 */
@@ -16,8 +19,6 @@ function citybudget_menu() {
     'title' => 'Budget',
     'page callback' => 'citybudget_function',
     'access arguments' => array('access city budget data'),
-    'type' => MENU_NORMAL_ITEM,
-    'file' => 'annotate.admin.inc',
   );
   return $items;
 }
@@ -34,4 +35,74 @@ function citybudget_perm() {
 
 function citybudget_function() {
   return 'asdf';
+}
+
+function _citybudget_list_entity_names($entity_type = 'programs') {
+  $entity_types = array('clusters', 'programs', 'expenditure_categories');
+  
+  if(!in_array($entity_type, $entity_types)) {
+    return FALSE;
+  }
+  
+  $query = 'SELECT * FROM {citybudget_' . $entity_type . '}';
+  $results = db_query($query);
+  
+  $entities = array();
+  while($result = db_fetch_array($results)) {
+    $entities[] = $result['name'];
+  }
+  return $entities;
+}
+
+function _citybudget_list_clusters() {
+  $query = 'SELECT * FROM {citybudget_clusters}';
+  $results = db_query($query);
+  
+  $clusters = array();
+  while($result = db_fetch_array($results)) {
+    $result_id = $result['id'];
+    unset($result['id']);
+    $clusters[$result_id] = $result;
+  }
+  return $clusters;
+}
+
+function _citybudget_list_programs($programs = array()) {
+  $query = 'SELECT * FROM {citybudget_programs}';
+  
+  $results = db_query($query);
+  
+  $clusters = _citybudget_list_clusters();
+  $programs = array();
+  while($result = db_fetch_array($results)) {
+    $result_id = $result['id'];
+    $result['cluster'] = $clusters[$result['cluster_id']]['name'];
+    unset($result['cluster_id']);
+    unset($result['id']);
+    $programs[$result_id] = $result;
+  }
+  return $programs;
+}
+
+function _citybudget_list_expenditure_categories() {
+  $query = 'SELECT * FROM {citybudget_expenditure_categories}';
+  $results = db_query($query);
+  
+  $expenditure_categories = array();
+  while($result = db_fetch_array($results)) {
+    $result_id = $result['id'];
+    unset($result['id']);
+    
+    switch($result['type']) {
+      case CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE:
+        $result['type'] = 'expense';
+        break;
+      case CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE:
+        $result['type'] = 'revenue';
+        break;
+    }
+    
+    $expenditure_categories[$result_id] = $result;
+  }
+  return $expenditure_categories;
 }

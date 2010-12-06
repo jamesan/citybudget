@@ -1,101 +1,116 @@
+
+
 function citybudget_test_data() {
+  // Insert clusters.
   $clusters[] = array(
     'id' => 1,
-    'cluster_id' => 1,
     'name' => 'The Accountability Offices',
   );
+  foreach($clusters as $cluster) {
+    drupal_write_record('citybudget_clusters', $cluster);
+  }
   
+  // Insert programs.
   $programs[] = array(
     'id' => 1,
+    'cluster_id' => 1,
     'name' => 'Council Appointed Programs'
   );
+  foreach($programs as $program) {
+    drupal_write_record('citybudget_programs', $program);
+  }
   
+  // Insert expenditure categories.
   $expenditure_categories[] = array(
     'id' => 1,
     'name' => 'Salaries and Benefits',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 2,
     'name' => 'Materials and Supplies',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 3,
-    'type' => 'equipment',
-    'type' => 'expense'
+    'name' => 'Equipment',
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 4,
     'name' => 'Services & Rents',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 5,
     'name' => 'Contributions to Capital',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 6,
     'name' => 'Contributions to Reserve/Res Funds',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 7,
     'name' => 'Other Expenditures',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 8,
     'name' => 'Interdivisional Charges',
-    'type' => 'expense'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE
   );
   $expenditure_categories[] = array(
     'id' => 9,
     'name' => 'Interdivisional Recoveries',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 10,
     'name' => 'Provincial Subsidies',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 11,
     'name' => 'Federal Subsidies',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 12,
     'name' => 'Other Subsidies',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 13,
     'name' => 'User Fees & Donations',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 14,
     'name' => 'Transfers from Capital Fund',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 15,
     'name' => 'Contribution from Reserve Funds',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 16,
     'name' => 'Contribution from Reserve',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
   $expenditure_categories[] = array(
     'id' => 17,
     'name' => 'Sundry Revenues',
-    'type' => 'revenue'
+    'type' => CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE
   );
-
+  foreach($expenditure_categories as $expenditure_category) {
+    drupal_write_record('citybudget_expenditure_categories', $expenditure_category);
+  }
+  
+  // Insert line items.
   $line_items[] = array(
     'program_id' => 1,
     'expenditure_id' => 1,
@@ -150,4 +165,7 @@ function citybudget_test_data() {
     '2011_outlook' => 61.4,
     '2012_outlook' => 61.4,
   );
+  foreach($line_items as $line_item) {
+    drupal_write_record('citybudget_line_items', $line_item);
+  }
 }
