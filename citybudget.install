@@ -1,0 +1,147 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+function citybudget_install() {
+  // Use schema API to create database table.
+  drupal_install_schema('citybudget');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function citybudget_uninstall() {
+  // Use schema API to delete database table.
+  drupal_uninstall_schema('citybudget');
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function citybudget_schema() {
+  $schema['citybudget_clusters'] = array(
+    'description' => t('Stores cluster categories for {programs} in the budget.'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('The primary identifier for this cluster.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => t('The name of this cluster, always treated as non-markup plain text.'),
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['citybudget_programs'] = array(
+    'description' => t('Stores programs in the budget.'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('The primary identifier for this program.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'cluster_id' => array(
+        'description' => t('The {clusters}.id identifier for this program.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => t('The name of this program, always treated as non-markup plain text.'),
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'cluster_id' => array('cluster_id'),
+    ),
+  );
+
+  $schema['citybudget_expenditure_categories'] = array(
+    'description' => t('Store the expenditure categories for all budgets'),
+    'fields' => array(
+      'id' => array(
+        'description' => t('The primary identifier for this expenditure category.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => t('The name of this category, always treated as non-markup plain text.'),
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => t('The type of this category: revenue or expense.'),
+        'type' => 'int',
+        'size' => 'tiny',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  $schema['citybudget_line_items'] = array(
+    'description' => t('Stores the actual budget line items.'),
+    'fields' => array(
+      'program_id' => array(
+        'description' => t('The {programs}.id program identifier for this line item.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'expenditure_id' => array(
+        'description' => t('The {expenditure_categories}.id category identifier for this line item.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      '2009_budget' => array(
+        'description' => t('The 2009 budget value for this line item.'),
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      '2009_actual' => array(
+        'description' => t('The 2009 actual budget value for this line item.'),
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      '2010_budget' => array(
+        'description' => t('The 2010 budget value for this line item.'),
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      '2011_outlook' => array(
+        'description' => t('The 2011 predicted value for this line item.'),
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      '2012_outlook' => array(
+        'description' => t('The 2012 predicted value for this line item.'),
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+    ),
+    'primary key' => array('program_id', 'expenditure_id'),
+  );
+
+  return $schema;
+}

@@ -1,0 +1,7 @@
+; $Id$
+name = City Budget Navigator
+description = API to serve budget data.
+
+; Requirements.
+core = 6.x
+php = 5.2
