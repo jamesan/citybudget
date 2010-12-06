@@ -37,6 +37,35 @@ function citybudget_function() {
   return 'asdf';
 }
 
+function _citybudget_get_budget_program($program_name) {
+  $is_program_exist = false;
+  $programs = _citybudget_list_programs('programs');
+  foreach($programs as $program_id => $program) {
+    if($program_name == $program->name) {
+      $is_program_exist = true;
+      break;
+    }
+  }
+  
+  if($is_program_exist) {
+    $query = 'SELECT * FROM {citybudget_line_items} WHERE program_id = %d';
+    $results = db_query($query, array($program_id));
+    
+    $expenditure_categories = _citybudget_list_expenditure_categories();
+    $line_items = array();
+    while($result = db_fetch_object($results)) {
+      $expenditure_id = $result->expenditure_id;
+      unset($result->program_id);
+      unset($result->expenditure_id);
+      $line_items[$expenditure_categories[$expenditure_id]->name] = $result;
+    }
+    $program->line_items = $line_items;
+    return $program;
+  } else {
+    return FALSE;
+  }
+}
+
 function _citybudget_list_entity_names($entity_type = 'programs') {
   $entity_types = array('clusters', 'programs', 'expenditure_categories');
   
@@ -48,8 +77,8 @@ function _citybudget_list_entity_names($entity_type = 'programs') {
   $results = db_query($query);
   
   $entities = array();
-  while($result = db_fetch_array($results)) {
-    $entities[] = $result['name'];
+  while($result = db_fetch_object($results)) {
+    $entities[] = $result->name;
   }
   return $entities;
 }
@@ -59,9 +88,9 @@ function _citybudget_list_clusters() {
   $results = db_query($query);
   
   $clusters = array();
-  while($result = db_fetch_array($results)) {
-    $result_id = $result['id'];
-    unset($result['id']);
+  while($result = db_fetch_object($results)) {
+    $result_id = $result->id;
+    unset($result->id);
     $clusters[$result_id] = $result;
   }
   return $clusters;
@@ -74,11 +103,11 @@ function _citybudget_list_programs($programs = array()) {
   
   $clusters = _citybudget_list_clusters();
   $programs = array();
-  while($result = db_fetch_array($results)) {
-    $result_id = $result['id'];
-    $result['cluster'] = $clusters[$result['cluster_id']]['name'];
-    unset($result['cluster_id']);
-    unset($result['id']);
+  while($result = db_fetch_object($results)) {
+    $result_id = $result->id;
+    $result->cluster_name = $clusters[$result->cluster_id]->name;
+    unset($result->cluster_id);
+    unset($result->id);
     $programs[$result_id] = $result;
   }
   return $programs;
@@ -89,16 +118,16 @@ function _citybudget_list_expenditure_categories() {
   $results = db_query($query);
   
   $expenditure_categories = array();
-  while($result = db_fetch_array($results)) {
-    $result_id = $result['id'];
-    unset($result['id']);
+  while($result = db_fetch_object($results)) {
+    $result_id = $result->id;
+    unset($result->id);
     
-    switch($result['type']) {
+    switch($result->type) {
       case CITYBUDGET_EXPENDITURE_CATEGORY_EXPENSE:
-        $result['type'] = 'expense';
+        $result->type = 'expense';
         break;
       case CITYBUDGET_EXPENDITURE_CATEGORY_REVENUE:
-        $result['type'] = 'revenue';
+        $result->type = 'revenue';
         break;
     }
     
