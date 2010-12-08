@@ -1,13 +1,8 @@
-#notetaking {
-  position: fixed;
-  top: 5px;
-  right: 5px;
-  padding: 5px;
-  border: 1px solid #000000;
-  width: 200px;
-  background-color: #FFFFFF;
+#citybudget-js-treemap .node {
+  margin: 0;
+  padding: 0;
 }
 
-#notetaking .subject, #notetaking .note {
-  width: 90%;
+#_tooltip {
+  color: white;
 }
