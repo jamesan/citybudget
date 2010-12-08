@@ -133,7 +133,8 @@ function _citybudget_list_clusters() {
 }
 
 function _citybudget_list_programs($programs = array()) {
-  $query = 'SELECT * FROM {citybudget_programs}';
+  $query = 'SELECT *, (SELECT SUM(2009_budget) FROM {citybudget_line_items} WHERE program_id = id GROUP BY program_id) AS "2009 Budget" FROM {citybudget_programs}';
+  //'SELECT * FROM {citybudget_programs}';
   
   $results = db_query($query);
   
