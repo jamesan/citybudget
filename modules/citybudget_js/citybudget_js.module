@@ -1,0 +1,53 @@
+<?php
+// $Id$
+
+/**
+* Implementation of hook_menu().
+*/
+function citybudget_js_menu() {
+  $items['example'] = array(
+    'title' => 'Budget',
+    'page callback' => 'citybudget_js_page',
+    'access arguments' => array('access content'),
+  );
+  return $items;
+}
+
+function citybudget_js_page() {
+  //drupal_add_css(drupal_get_path('module', 'citybudget_js') . '/css/citybudget_js.css');
+  drupal_add_js(drupal_get_path('module', 'citybudget_js') . '/js/citybudget_js.js');
+  return '<div id="citybudget-js"></div>';
+}
+
+/**
+ * Implementation of hook_default_services_endpoint().
+ */
+function citybudget_js_default_services_endpoint() {
+  $endpoints = array();
+
+  $endpoint = new stdClass;
+  $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
+  $endpoint->api_version = 3;
+  $endpoint->name = 'citybudget';
+  $endpoint->title = 'City Budget API';
+  $endpoint->server = 'rest_server';
+  $endpoint->path = 'api';
+  $endpoint->authentication = array();
+  $endpoint->resources = array(
+    'citybudget' => array(
+      'alias' => '',
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => 1,
+        ),
+        'index' => array(
+          'enabled' => 1,
+        ),
+      ),
+    ),
+  );
+
+  $endpoints[] = $endpoint;
+
+  return $endpoints;
+}

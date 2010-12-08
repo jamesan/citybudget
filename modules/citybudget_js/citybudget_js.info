@@ -1,0 +1,12 @@
+; $Id$
+name = City Budget JS Client
+description = Sample endpoint definition and javascript client implementation.
+package = City Budget
+
+; Requirements
+core = 6.x
+php = 5.2
+
+; Dependencies
+dependencies[] = citybudget
+dependencies[] = rest_server

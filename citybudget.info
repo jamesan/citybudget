@@ -1,7 +1,12 @@
 ; $Id$
 name = City Budget Navigator
 description = API to serve budget data.
+package = City Budget
 
-; Requirements.
+; Requirements
 core = 6.x
 php = 5.2
+
+; Dependencies
+dependencies[] = libraries
+dependencies[] = rest_server

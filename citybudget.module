@@ -16,11 +16,6 @@ define('CITYBUDGET_CATEGORY_BOTH', 2);
 * Implementation of hook_menu().
 */
 function citybudget_menu() {
-  $items['budget'] = array(
-    'title' => 'Budget',
-    'page callback' => 'citybudget_function',
-    'access arguments' => array('access city budget data'),
-  );
   $items['admin/content/citybudget'] = array(
     'title' => 'Import Budget Data',
     'description' => 'Import new budget data from CSV.',
@@ -34,6 +29,41 @@ function citybudget_menu() {
 }
 
 /**
+ * Implementation of hook_services_resources().
+ */
+function citybudget_services_resources() {
+  return array(
+    'citybudget' => array(
+      'retrieve' => array(
+        'help' => 'Retrieves a budget',
+        'file' => array('file' => 'inc', 'module' => 'citybudget'),
+        'callback' => '_citybudget_retrieve',
+        'access callback' => 'user_access',
+        'access arguments' => array('access content'),
+        'access arguments append' => FALSE,
+        'args' => array(
+          array(
+            'name' => 'name',
+            'type' => 'int',
+            'description' => 'The name of the budget to get',
+             'source' => array('path' => '0'),
+            'optional' => FALSE,
+          ),
+        ),
+      ),
+      'index' => array(
+        'help' => 'Retrieves a listing of budgets',
+        'file' => array('file' => 'inc', 'module' => 'citybudget'),
+        'callback' => '_citybudget_index',
+        'access callback' => 'user_access',
+        'access arguments' => array('access content'),
+        'access arguments append' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
 * Implementation of hook_perm().
 */
 function citybudget_perm() {
@@ -41,10 +71,6 @@ function citybudget_perm() {
     'administer city budget',
     'access city budget data',
   );
-}
-
-function citybudget_function() {
-  return 'asdf';
 }
 
 function _citybudget_get_budget_program($program_name) {

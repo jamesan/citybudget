@@ -58,11 +58,11 @@ function citybudget_import_data_submit($form, &$form_state) {
       $categories[$row['Category']] = CITYBUDGET_CATEGORY_BOTH;
     }
   }
-  /*
+  
   db_query('TRUNCATE TABLE {citybudget_clusters}');
   db_query('TRUNCATE TABLE {citybudget_programs}');
   db_query('TRUNCATE TABLE {citybudget_categories}');
-  */
+  
   foreach($clusters as $cluster_name => $count) {
     $cluster_record = new StdClass();
     $cluster_record->name = $cluster_name;
@@ -118,6 +118,4 @@ function citybudget_import_data_submit($form, &$form_state) {
     drupal_write_record('citybudget_line_items', $line_item);
     $line_item_records[] = $line_item;
   }
-  
-  //$form_state['redirect'] = 'budget';
 }
