@@ -10,3 +10,4 @@ php = 5.2
 ; Dependencies
 dependencies[] = citybudget
 dependencies[] = rest_server
+dependencies[] = jquery_ui

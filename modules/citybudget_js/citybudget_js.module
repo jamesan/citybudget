@@ -15,9 +15,14 @@ function citybudget_js_menu() {
 
 function citybudget_js_page() {
   drupal_add_js(libraries_get_path('jit') . '/jit-yc.js');
+  drupal_add_js(libraries_get_path('jquery.color') . '/jquery.color.js');
+  drupal_add_js(drupal_get_path('module', 'citybudget_js') . '/js/jquery-ui-1.7.3.custom.min.js');
+  
   drupal_add_js(drupal_get_path('module', 'citybudget_js') . '/js/citybudget_js.js');
   drupal_add_css(drupal_get_path('module', 'citybudget_js') . '/css/citybudget_js.css');
-  return '<div id="citybudget-js-treemap" style="height:600px;width=800px;"></div><div id="citybudget-js"></div>';
+  return '<div id="citybudget-js-treemap1"></div>' .
+         '<div id="citybudget-js-treemap2"></div>' .
+         '<div id="citybudget-js"></div>';
 }
 
 /**

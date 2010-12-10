@@ -1,8 +1,15 @@
-#citybudget-js-treemap .node {
-  margin: 0;
-  padding: 0;
+#citybudget-js-treemap1.ui-progressbar div {
+  height: 12px;
+  width: 1010px;
+  background-image: url('/sites/all/modules/citybudget/modules/citybudget_js/progressbg_green.gif');
+}
+
+#citybudget-js-treemap2 {
+  /*margin-top: -600px;*/
+  height: 600px;
+  width: 1010px;
 }
 
 #_tooltip {
-  color: white;
+  color: red;
 }
